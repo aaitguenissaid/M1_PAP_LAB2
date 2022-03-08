@@ -8,20 +8,51 @@
 
 #include "sorting.h"
 
-/* 
+/*
    bubble sort -- sequential, parallel --
 */
-
+void swap(uint64_t *a, uint64_t *b) {
+    uint64_t tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
 void sequential_bubble_sort(uint64_t *T, const uint64_t size) {
-    /* TODO: sequential implementation of bubble sort */
+    uint8_t sorted;
+    do {
+        sorted = 1;
 
-    return;
+        for (int i = 0; i < size-1; i++) {
+            if (T[i] > T[i + 1]) {
+                swap(T+i, T+i+1);
+                sorted = 0;
+            }
+        }
+    } while (sorted == 0);
 }
 
+#define NUM_THREADS 2
 void parallel_bubble_sort(uint64_t *T, const uint64_t size) {
-    /* TODO: parallel implementation of bubble sort */
 
-    return;
+omp_set_num_threads(NUM_THREADS);
+    uint64_t chunk_size = size/NUM_THREADS;
+    register uint8_t sorted;
+    do {
+        sorted = 1;
+#pragma omp parallel for
+        for (int i = 0; i < NUM_THREADS; i++) {
+            sequential_bubble_sort(T+i*chunk_size, chunk_size);
+        }
+
+#pragma omp parallel for reduction (&&:sorted)
+        for (int i = 1; i < NUM_THREADS; i++) {
+            int index= i*chunk_size;
+            if (T[index-1] > T[index]) {
+                swap(T+index-1, T+index);
+                sorted = 0;
+            }
+        }
+    } while (sorted == 0);
+return;
 }
 
 
@@ -43,7 +74,7 @@ int main(int argc, char **argv) {
     /* the array to be sorted */
     uint64_t *X = (uint64_t *) malloc(N * sizeof(uint64_t));
 
-    printf("--> Sorting an array of size %u\n", N);
+    printf("--> Sorting an array of size %lu\n", N);
 #ifdef RINIT
     printf("--> The array is initialized randomly\n");
 #endif
@@ -69,11 +100,10 @@ int main(int argc, char **argv) {
 
         /* verifying that X is properly sorted */
 #ifdef RINIT
-        if (! is_sorted (X, N))
-        {
-            print_array (X, N) ;
-            fprintf(stderr, "ERROR: the sequential sorting of the array failed\n") ;
-            exit (-1) ;
+        if (! is_sorted (X, N)) {
+            print_array (X, N);
+            fprintf(stderr, "ERROR: the sequential sorting of the array failed\n");
+            exit(-1);
         }
 #else
         if (!is_sorted_sequence(X, N)) {
@@ -107,11 +137,10 @@ int main(int argc, char **argv) {
 
         /* verifying that X is properly sorted */
 #ifdef RINIT
-        if (! is_sorted (X, N))
-        {
-            print_array (X, N) ;
-            fprintf(stderr, "ERROR: the parallel sorting of the array failed\n") ;
-            exit (-1) ;
+        if (! is_sorted (X, N)) {
+            print_array (X, N);
+            fprintf(stderr, "ERROR: the parallel sorting of the array failed\n");
+            exit(-1);
         }
 #else
         if (!is_sorted_sequence(X, N)) {
