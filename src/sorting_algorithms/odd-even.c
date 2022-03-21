@@ -130,7 +130,11 @@ int main(int argc, char **argv) {
 
         clock_gettime(CLOCK_MONOTONIC, &begin);
 
-        parallel_oddeven_sort(X, N);
+#pragma omp parallel
+#pragma omp single
+        {
+            parallel_oddeven_sort(X, N);
+        }
 
         clock_gettime(CLOCK_MONOTONIC, &end);
 
