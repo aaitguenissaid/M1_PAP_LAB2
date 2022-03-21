@@ -25,10 +25,9 @@ void sequential_bubble_sort(uint64_t *T, const uint64_t size) {
     } while (sorted == 0);
 }
 
-#define NUM_THREADS 2
-void parallel_bubble_sort(uint64_t *T, const uint64_t size) {
-
+#define NUM_THREADS 16
 omp_set_num_threads(NUM_THREADS);
+void parallel_bubble_sort(uint64_t *T, const uint64_t size) {
     uint64_t chunk_size = size/NUM_THREADS;
     register uint8_t sorted;
     do {

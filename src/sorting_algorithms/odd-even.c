@@ -34,10 +34,27 @@ void sequential_oddeven_sort(uint64_t *T, const uint64_t size) {
     return;
 }
 
-
+#define NUM_THREADS 16
+omp_set_num_threads(NUM_THREADS);
 void parallel_oddeven_sort(uint64_t *T, const uint64_t size) {
+    do {
+        sorted = 1;
+#pragma omp parallel for
+        for(int i=0; i < size; i+=2) {
+            if(T[i] > T[i+1]){
+                swap(T+i, T+i+1);
+                sorted = 0;
+            }
+        }
+#pragma omp parallel for
+        for (int i=1; i < size; i+=2){
+            if(T[i] > T[i+1]) {
+                swap(T+i, T+i+1);
+                sorted = 0;
+            }
+        }
+    } while (sorted == 0);
 
-    /* TODO: parallel implementation of odd-even sort */
 
     return;
 }
