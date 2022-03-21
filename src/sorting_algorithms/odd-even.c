@@ -34,9 +34,9 @@ void sequential_oddeven_sort(uint64_t *T, const uint64_t size) {
     return;
 }
 
-#define NUM_THREADS 16
-omp_set_num_threads(NUM_THREADS);
 void parallel_oddeven_sort(uint64_t *T, const uint64_t size) {
+    omp_set_num_threads(NUM_THREADS);
+    uint8_t sorted;
     do {
         sorted = 1;
 #pragma omp parallel for

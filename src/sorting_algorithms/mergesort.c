@@ -60,7 +60,7 @@ void sequential_merge_sort(uint64_t *T, const uint64_t size) {
     merge(T, size/2);
     return;
 }
-#define NUM_THREADS 4
+
 void parallel_merge_sort(uint64_t *T, const uint64_t size) {
     omp_set_num_threads(NUM_THREADS);
     if(size<2) return;
