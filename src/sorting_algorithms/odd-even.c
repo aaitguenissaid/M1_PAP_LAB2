@@ -46,6 +46,9 @@ void parallel_oddeven_sort(uint64_t *T, const uint64_t size) {
                 sorted = 0;
             }
         }
+
+#pragma omp barrier
+
 #pragma omp parallel for reduction (&&:sorted)
         for (int i=1; i < size; i+=2){
             if(T[i] > T[i+1]) {
