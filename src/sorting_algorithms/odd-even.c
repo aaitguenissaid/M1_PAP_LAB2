@@ -39,14 +39,14 @@ void parallel_oddeven_sort(uint64_t *T, const uint64_t size) {
     uint8_t sorted;
     do {
         sorted = 1;
-#pragma omp parallel for
+#pragma omp parallel for reduction (&&:sorted)
         for(int i=0; i < size; i+=2) {
             if(T[i] > T[i+1]){
                 swap(T+i, T+i+1);
                 sorted = 0;
             }
         }
-#pragma omp parallel for
+#pragma omp parallel for reduction (&&:sorted)
         for (int i=1; i < size; i+=2){
             if(T[i] > T[i+1]) {
                 swap(T+i, T+i+1);
