@@ -19,13 +19,13 @@ void sequential_oddeven_sort(uint64_t *T, const uint64_t size) {
     do {
         for(int i=0; i < size; i+=2) {
             if(T[i] > T[i+1]){
-                swap(T[i], T[i+1]);
+                swap(T+i, T+i+1);
                 sorted = 0;
             }
         }
         for (int i=1; i < size; i+=2){
             if(T[i] > T[i+1]) {
-                swap(T[i], T[i+1]);
+                swap(T+i, T+i+1);
                 sorted = 0;
             }
         }
