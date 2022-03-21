@@ -17,6 +17,7 @@
 void sequential_oddeven_sort(uint64_t *T, const uint64_t size) {
     uint8_t sorted = 1;
     do {
+        sorted = 1;
         for(int i=0; i < size; i+=2) {
             if(T[i] > T[i+1]){
                 swap(T+i, T+i+1);
