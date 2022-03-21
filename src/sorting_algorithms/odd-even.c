@@ -54,8 +54,6 @@ void parallel_oddeven_sort(uint64_t *T, const uint64_t size) {
             }
         }
     } while (sorted == 0);
-
-
     return;
 }
 

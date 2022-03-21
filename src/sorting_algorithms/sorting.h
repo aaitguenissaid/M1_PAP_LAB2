@@ -3,7 +3,7 @@
 
 
 #define NBEXPERIMENTS    10
-#define NUM_THREADS 2
+#define NUM_THREADS 16
 
 extern double experiments [NBEXPERIMENTS] ;
 
