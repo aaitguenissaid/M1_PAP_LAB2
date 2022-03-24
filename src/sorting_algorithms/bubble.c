@@ -25,7 +25,7 @@ void sequential_bubble_sort(uint64_t *T, const uint64_t size) {
     } while (sorted == 0);
 }
 
-void parallel_bubble_sort(uint64_t *T, const uint64_t size) {
+void parallel_bubble_sort(uint64_t *T, const uint64_t size, const uint64_t NUM_THREADS) {
 
 omp_set_num_threads(NUM_THREADS);
     uint64_t chunk_size = size/NUM_THREADS;
@@ -59,12 +59,13 @@ int main(int argc, char **argv) {
 
     /* the program takes one parameter N which is the size of the array to
        be sorted. The array will have size 2^N */
-    if (argc != 2) {
+    if (argc != 3) {
         fprintf(stderr, "bubble.run N \n");
         exit(-1);
     }
 
     uint64_t N = 1 << (atoi(argv[1]));
+    uint64_t NUM_THREADS = atoi(argv[2]);
     /* the array to be sorted */
     uint64_t *X = (uint64_t *) malloc(N * sizeof(uint64_t));
 
@@ -122,7 +123,7 @@ int main(int argc, char **argv) {
 
         clock_gettime(CLOCK_MONOTONIC, &begin);
 
-        parallel_bubble_sort(X, N);
+        parallel_bubble_sort(X, N, NUM_THREADS);
 
         clock_gettime(CLOCK_MONOTONIC, &end);
 
@@ -168,7 +169,7 @@ int main(int argc, char **argv) {
     memcpy(Z, Y, N * sizeof(uint64_t));
 
     sequential_bubble_sort(Y, N);
-    parallel_bubble_sort(Z, N);
+    parallel_bubble_sort(Z, N, NUM_THREADS);
 
     if (!are_vector_equals(Y, Z, N)) {
         fprintf(stderr,
