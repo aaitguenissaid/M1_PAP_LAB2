@@ -68,7 +68,8 @@ int main(int argc, char **argv) {
     /* the array to be sorted */
     uint64_t *X = (uint64_t *) malloc(N * sizeof(uint64_t));
 
-    printf("--> Sorting an array of size %lu\n", N);
+    //printf("--> Sorting an array of size %lu\n", N);
+    printf("%lu ", N);
 #ifdef RINIT
     printf("--> The array is initialized randomly\n");
 #endif
@@ -108,7 +109,8 @@ int main(int argc, char **argv) {
 #endif
     }
 
-    printf("\n bubble serial \t\t\t %.3lf seconds\n\n", average_time());
+    //printf("\n bubble serial \t\t\t %.3lf seconds\n\n", average_time());
+    printf("%.3lf ", average_time());
 
 
     for (exp = 0; exp < NBEXPERIMENTS; exp++) {
@@ -147,7 +149,8 @@ int main(int argc, char **argv) {
 
     }
 
-    printf("\n bubble parallel \t\t %.3lf seconds\n\n", average_time());
+    //printf("\n bubble parallel \t\t %.3lf seconds\n\n", average_time());
+    printf("%.3lf \n", average_time());
 
 
     /* print_array (X, N) ; */
