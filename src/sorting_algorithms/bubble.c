@@ -120,6 +120,7 @@ int main(int argc, char **argv) {
 
         clock_gettime(CLOCK_MONOTONIC, &begin);
 
+        omp_set_num_threads(NUM_THREADS);
         parallel_bubble_sort(X, N);
 
         clock_gettime(CLOCK_MONOTONIC, &end);

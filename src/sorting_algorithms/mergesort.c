@@ -144,6 +144,8 @@ int main(int argc, char **argv) {
 #endif
 
         clock_gettime(CLOCK_MONOTONIC, &begin);
+
+        omp_set_num_threads(NUM_THREADS);
 #pragma omp parallel
 #pragma omp single
         {
