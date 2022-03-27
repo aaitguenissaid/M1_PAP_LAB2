@@ -34,8 +34,7 @@ void sequential_oddeven_sort(uint64_t *T, const uint64_t size) {
     return;
 }
 
-void parallel_oddeven_sort(uint64_t *T, const uint64_t size, const uint64_t NUM_THREADS) {
-    omp_set_num_threads(NUM_THREADS);
+void parallel_oddeven_sort(uint64_t *T, const uint64_t size) {
     uint8_t sorted;
     do {
         sorted = 1;
@@ -70,13 +69,12 @@ int main(int argc, char **argv) {
 
     /* the program takes one parameter N which is the size of the array to
        be sorted. The array will have size 2^N */
-    if (argc != 3) {
+    if (argc != 2) {
         fprintf(stderr, "odd-even.run N \n");
         exit(-1);
     }
 
     uint64_t N = 1 << (atoi(argv[1]));
-    uint64_t NUM_THREADS = atoi(argv[2]);
     /* the array to be sorted */
     uint64_t *X = (uint64_t *) malloc(N * sizeof(uint64_t));
 
@@ -136,7 +134,7 @@ int main(int argc, char **argv) {
 
         clock_gettime(CLOCK_MONOTONIC, &begin);
 
-        parallel_oddeven_sort(X, N, NUM_THREADS);
+        parallel_oddeven_sort(X, N);
 
         clock_gettime(CLOCK_MONOTONIC, &end);
 
@@ -183,7 +181,7 @@ int main(int argc, char **argv) {
     memcpy(Z, Y, N * sizeof(uint64_t));
 
     sequential_oddeven_sort(Y, N);
-    parallel_oddeven_sort(Z, N, NUM_THREADS);
+    parallel_oddeven_sort(Z, N);
 
     if (!are_vector_equals(Y, Z, N)) {
         fprintf(stderr,

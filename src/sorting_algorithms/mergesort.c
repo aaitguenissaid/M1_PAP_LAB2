@@ -61,13 +61,12 @@ void sequential_merge_sort(uint64_t *T, const uint64_t size) {
     return;
 }
 
-void parallel_merge_sort(uint64_t *T, const uint64_t size, const uint64_t NUM_THREADS) {
-    omp_set_num_threads(NUM_THREADS);
+void parallel_merge_sort(uint64_t *T, const uint64_t size) {
     if(size<2) return;
 #pragma omp task shared(T) if(size > 1000000)
-        parallel_merge_sort(T, size/2, NUM_THREADS);
+        parallel_merge_sort(T, size/2);
 #pragma omp task shared(T) if(size > 1000000)
-        parallel_merge_sort(T+size/2, size/2, NUM_THREADS);
+        parallel_merge_sort(T+size/2, size/2);
 #pragma omp taskwait
         merge(T, size/2);
     return;
@@ -83,13 +82,12 @@ int main(int argc, char **argv) {
 
     /* the program takes one parameter N which is the size of the array to
        be sorted. The array will have size 2^N */
-    if (argc != 3) {
+    if (argc != 2) {
         fprintf(stderr, "merge.run N \n");
         exit(-1);
     }
 
     uint64_t N = 1 << (atoi(argv[1]));
-    uint64_t NUM_THREADS = atoi(argv[2]);
     /* the array to be sorted */
     uint64_t *X = (uint64_t *) malloc(N * sizeof(uint64_t));
 
@@ -149,7 +147,7 @@ int main(int argc, char **argv) {
 #pragma omp parallel
 #pragma omp single
         {
-            parallel_merge_sort(X, N, NUM_THREADS);
+            parallel_merge_sort(X, N);
         }
 
         clock_gettime(CLOCK_MONOTONIC, &end);
@@ -196,7 +194,7 @@ int main(int argc, char **argv) {
     memcpy(Z, Y, N * sizeof(uint64_t));
 
     sequential_merge_sort(Y, N);
-    parallel_merge_sort(Z, N, NUM_THREADS);
+    parallel_merge_sort(Z, N);
 
     if (!are_vector_equals(Y, Z, N)) {
         fprintf(stderr,
